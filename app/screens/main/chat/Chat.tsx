@@ -64,7 +64,8 @@ const Chat: React.FC<ChatProps> = ({ route, navigation }) => {
                 refetchHistory();
             }
             let title = route.params.name;
-            if (!title) {
+            console.log(title);
+            if (title === 'New Chat') {
                 if (title.length >= 32) {
                     title = title.slice(0, 30) + '...';
                 }
