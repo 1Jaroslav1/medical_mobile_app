@@ -1,36 +1,28 @@
-// CustomDrawerContent.tsx
 import { useCallback } from 'react';
-import {
-    View,
-    VStack,
-    HStack,
-    Pressable,
-    Text,
-    Divider,
-    Icon,
-    Box,
-    Image,
-} from 'native-base';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Box, Image } from 'native-base';
 import {
     DrawerContentScrollView,
     DrawerContentComponentProps,
 } from '@react-navigation/drawer';
-import RobotIcon from '../../images/robot.png';
 import DrawerItem from './DrawerItem';
-import { Alert } from 'react-native';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useUser } from '../../../api/useUser';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const RobotIcon = require('../../../../assets/robot.png');
 
 const CustomDrawerContent: React.FC<DrawerContentComponentProps> = props => {
     const { state, descriptors, navigation } = props;
     const { logout } = useAuth();
+    const { data: user } = useUser();
     const handleLogoutClick = useCallback(() => {
         logout!();
     }, []);
+    const insets = useSafeAreaInsets();
 
     return (
-        <View flex={1} padding="5px">
+        <View flex={1} px="5px" pt={insets.top} pb="5px">
             <View bgColor="#333333" borderRadius="10px">
                 <Box
                     p="20px"
@@ -41,10 +33,10 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = props => {
                     <Image source={RobotIcon} alt="Alternate Text" size="xs" />
                     <Box ml="10px">
                         <Text color="white" fontSize="xl">
-                            Yaroslav Harbar
+                            {user?.name}
                         </Text>
                         <Text color="white" fontSize="md">
-                            garbar.jarek@gmail.com
+                            {user?.email}
                         </Text>
                     </Box>
                 </Box>
@@ -57,10 +49,8 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = props => {
                     borderRadius: 10,
                 }}
             >
-                {state.routes.map((route, index) => {
-                    const isFocused = state.index === index;
+                {state.routes.map(route => {
                     const { options } = descriptors[route.key];
-
                     const onPress = () => {
                         const event = navigation.emit({
                             type: 'drawerItemPress',
@@ -68,7 +58,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = props => {
                             canPreventDefault: true,
                         });
                         navigation.closeDrawer();
-                        if (!isFocused && !event.defaultPrevented) {
+                        if (!event.defaultPrevented) {
                             navigation.navigate(route.name);
                         }
                     };
@@ -81,7 +71,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = props => {
                             label={drawerLabel}
                             onPress={onPress}
                             icon={icon}
-                            isFocused={isFocused}
+                            isFocused={false}
                         />
                     );
                 })}

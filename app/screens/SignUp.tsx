@@ -11,13 +11,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../App';
 
 interface SignUpRequest {
-    name: string;
+    username: string;
     email: string;
     password: string;
 }
 
 const schema = yup.object({
-    name: yup.string().required('Name is required'),
+    username: yup.string().required('Username is required'),
     email: yup.string().required('Email is required'),
     password: yup.string().required('Password is required'),
 });
@@ -64,10 +64,10 @@ const SignUp: React.FC<SignUpProps> = ({ navigation }) => {
             </Heading>
             <Box w="100%">
                 <FormInput
-                    name="name"
+                    name="username"
                     control={control}
                     mb="10px"
-                    placeholder="Enter name..."
+                    placeholder="Enter username..."
                 />
                 <FormInput
                     name="email"

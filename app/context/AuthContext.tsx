@@ -1,8 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import { API_URL } from '../api/api';
 import * as SecureStore from 'expo-secure-store';
-import { Alert } from 'react-native';
 
 interface AuthState {
     token: string | null;

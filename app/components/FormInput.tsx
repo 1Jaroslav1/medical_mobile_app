@@ -1,4 +1,4 @@
-import { Control, useController, UseControllerProps } from 'react-hook-form';
+import { Control, useController } from 'react-hook-form';
 import { Input, Text, View } from 'native-base';
 
 interface FormInput {

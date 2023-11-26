@@ -12,6 +12,7 @@ import {
     SafeAreaProvider,
     useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import axios from 'axios';
 
 const queryClient = new QueryClient();
 
@@ -39,17 +40,17 @@ export type StackParamList = {
 
 export const Layout = () => {
     const { authState } = useAuth();
-    const insets = useSafeAreaInsets();
+
+    if (authState?.authenticated) {
+        axios.defaults.headers.common['Authorization'] =
+            `Bearer ${authState.token}`;
+    }
+
     return (
         <View
             style={{
                 flex: 1,
                 justifyContent: 'space-between',
-
-                paddingTop: insets.top,
-                paddingBottom: insets.bottom,
-                paddingLeft: insets.left,
-                paddingRight: insets.right,
             }}
         >
             <NavigationContainer>

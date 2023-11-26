@@ -8,7 +8,16 @@ import { useAuth } from '../context/AuthContext';
 import { FormInput } from '../components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { Box, Button, Heading, Modal, Text, Spinner, View } from 'native-base';
+import {
+    Box,
+    Button,
+    Heading,
+    Modal,
+    Text,
+    Spinner,
+    View,
+    VStack,
+} from 'native-base';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../App';
 import { useNavigation } from '@react-navigation/native';
@@ -30,7 +39,6 @@ type SignInProps = {
 };
 
 const SignIn: React.FC<SignInProps> = ({ navigation }) => {
-    const [showModal, setShowModal] = useState<boolean>(false);
     const { control, handleSubmit } = useForm<SignInRequest>({
         resolver: yupResolver(schema),
     });
@@ -51,10 +59,6 @@ const SignIn: React.FC<SignInProps> = ({ navigation }) => {
             await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
         },
     });
-
-    useEffect(() => {
-        setShowModal(isPending);
-    }, [isPending]);
 
     const onSubmit = useCallback(
         (data: SignInRequest) => {
@@ -100,13 +104,21 @@ const SignIn: React.FC<SignInProps> = ({ navigation }) => {
                     Sign up
                 </Text>
             </Box>
-            {/* <Modal isOpen={true}>
-                <Modal.Content maxWidth="400px">
-                    <Modal.CloseButton />
-                    <Modal.Header>Sign In</Modal.Header>
-                    <Modal.Body>Text</Modal.Body>
+            <Modal isOpen={isPending}>
+                <Modal.Content minWidth="200px" minHeight="100px">
+                    <Modal.Body
+                        flex={1}
+                        justifyContent="center"
+                        alignItems="center"
+                        h="100%"
+                    >
+                        <VStack space={4}>
+                            <Text fontSize={20}>Sign In</Text>
+                            <Spinner size={30} />
+                        </VStack>
+                    </Modal.Body>
                 </Modal.Content>
-            </Modal> */}
+            </Modal>
         </View>
     );
 };

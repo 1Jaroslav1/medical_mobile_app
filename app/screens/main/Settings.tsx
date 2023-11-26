@@ -2,11 +2,11 @@ import { Box, Input, VStack } from 'native-base';
 import { DrawerList } from './Workspace';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 
-type ChatProps = {
-    navigation: DrawerNavigationProp<DrawerList, 'Chat'>;
+type SettingsProps = {
+    navigation: DrawerNavigationProp<DrawerList, 'Settings'>;
 };
 
-const Home: React.FC<ChatProps> = ({ navigation }) => {
+const Settings: React.FC<SettingsProps> = ({ navigation }) => {
     return (
         <VStack flex={1}>
             <Box flex={1} justifyContent="flex-end" p="4">
@@ -16,4 +16,4 @@ const Home: React.FC<ChatProps> = ({ navigation }) => {
     );
 };
 
-export default Home;
+export default Settings;

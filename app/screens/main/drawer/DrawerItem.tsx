@@ -21,6 +21,18 @@ const DrawerItem: React.FC<DrawerItemProps> = ({
     icon,
     isFocused,
 }) => {
+    const renderLabel = () => {
+        if (typeof label === 'function') {
+            return label({ color: 'white', focused: isFocused || false });
+        } else {
+            return (
+                <Text color="white" fontSize="md">
+                    {label}
+                </Text>
+            );
+        }
+    };
+
     return (
         <Pressable
             onPress={onPress}
@@ -32,9 +44,7 @@ const DrawerItem: React.FC<DrawerItemProps> = ({
         >
             <HStack space="5" alignItems="center">
                 {icon && icon({ focused: false, color: 'white', size: 24 })}
-                <Text color="white" fontSize="md">
-                    {label}
-                </Text>
+                {renderLabel()}
             </HStack>
         </Pressable>
     );

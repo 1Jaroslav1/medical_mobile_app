@@ -1,12 +1,17 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import Home from './Chat';
-import Drawer from './Drawer';
+import Chat from './chat/Chat';
+import History from './history/History';
+import Settings from './Settings';
+import Drawer from './drawer/Drawer';
 import { Dimensions } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
 export type DrawerList = {
-    Chat: undefined;
+    Chat: { chatId: number | null; name: string };
     History: undefined;
+    Settings: undefined;
 };
 
 const NDrawer = createDrawerNavigator<DrawerList>();
@@ -26,11 +31,33 @@ const Workspace = () => {
         >
             <NDrawer.Screen
                 name="Chat"
-                component={Home}
-                options={{
+                component={Chat}
+                initialParams={{ chatId: null }}
+                options={({ route }) => ({
+                    title: route.params?.name || 'New Chat',
                     drawerLabel: 'New Chat',
                     drawerIcon: () => (
                         <AntDesign name="plus" size={24} color="white" />
+                    ),
+                })}
+            />
+            <NDrawer.Screen
+                name="History"
+                component={History}
+                options={{
+                    drawerLabel: 'History',
+                    drawerIcon: () => (
+                        <MaterialIcons name="history" size={24} color="white" />
+                    ),
+                }}
+            />
+            <NDrawer.Screen
+                name="Settings"
+                component={Settings}
+                options={{
+                    drawerLabel: 'Settings',
+                    drawerIcon: () => (
+                        <Feather name="settings" size={24} color="white" />
                     ),
                 }}
             />
