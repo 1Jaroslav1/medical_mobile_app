@@ -1,11 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { API_URL } from '../api/api';
+import { API_URL } from '../../api/api';
 import { useForm } from 'react-hook-form';
-import * as SecureStore from 'expo-secure-store';
-import { useAuth } from '../context/AuthContext';
-import { FormInput } from '../components';
+import { FormInput } from '../../components';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import {
@@ -17,58 +15,56 @@ import {
     Spinner,
     View,
     VStack,
+    useToast,
 } from 'native-base';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { StackParamList } from '../../App';
-import { useNavigation } from '@react-navigation/native';
+import { StackParamList } from '../../../App';
+import { fetchApi } from '../../api/fetchApi';
 
-const TOKEN_KEY = 'TOKEN';
-
-interface SignInRequest {
+interface SignUpRequest {
+    username: string;
     email: string;
     password: string;
 }
 
 const schema = yup.object({
+    username: yup.string().required('Username is required'),
     email: yup.string().required('Email is required'),
     password: yup.string().required('Password is required'),
 });
 
-type SignInProps = {
-    navigation: NativeStackNavigationProp<StackParamList, 'SignIn'>;
+type SignUpProps = {
+    navigation: NativeStackNavigationProp<StackParamList, 'SignUp'>;
 };
 
-const SignIn: React.FC<SignInProps> = ({ navigation }) => {
-    const { control, handleSubmit } = useForm<SignInRequest>({
+const SignUp: React.FC<SignUpProps> = ({ navigation }) => {
+    const toast = useToast();
+
+    const { control, handleSubmit } = useForm<SignUpRequest>({
         resolver: yupResolver(schema),
     });
 
-    const { setAuthState } = useAuth();
-
     const { mutate, isPending } = useMutation({
-        mutationFn: (data: SignInRequest) => {
-            return axios.post(API_URL.SIGN_IN, data);
+        mutationFn: (data: SignUpRequest) => {
+            return fetchApi()(
+                { url: API_URL.SIGN_UP, method: 'POST', postData: data },
+                toast,
+            );
         },
-        onSuccess: async result => {
-            setAuthState!({
-                token: result.data.token,
-                authenticated: true,
-            });
-            axios.defaults.headers.common['Authorization'] =
-                `Bearer ${result.data.token}`;
-            await SecureStore.setItemAsync(TOKEN_KEY, result.data.token);
+        onSuccess: () => {
+            navigation.navigate('SignIn');
         },
     });
 
     const onSubmit = useCallback(
-        (data: SignInRequest) => {
+        (data: SignUpRequest) => {
             mutate(data);
         },
         [mutate],
     );
 
-    const handleSignUp = useCallback(() => {
-        navigation.navigate('SignUp');
+    const handleSignIn = useCallback(() => {
+        navigation.navigate('SignIn');
     }, []);
 
     return (
@@ -84,6 +80,12 @@ const SignIn: React.FC<SignInProps> = ({ navigation }) => {
             </Heading>
             <Box w="100%">
                 <FormInput
+                    name="username"
+                    control={control}
+                    mb="10px"
+                    placeholder="Enter username..."
+                />
+                <FormInput
                     name="email"
                     control={control}
                     mb="10px"
@@ -96,12 +98,12 @@ const SignIn: React.FC<SignInProps> = ({ navigation }) => {
                     mb="10px"
                     placeholder="Enter password..."
                 />
-                <Button onPress={handleSubmit(onSubmit)}>SignIn</Button>
+                <Button onPress={handleSubmit(onSubmit)}>SignUp</Button>
             </Box>
             <Box p="20px" flexDirection="row">
-                <Text>Don't have an account?</Text>{' '}
-                <Text color="primary.500" onPress={handleSignUp}>
-                    Sign up
+                <Text>Have an account?</Text>{' '}
+                <Text color="primary.500" onPress={handleSignIn}>
+                    Sign in
                 </Text>
             </Box>
             <Modal isOpen={isPending}>
@@ -123,4 +125,4 @@ const SignIn: React.FC<SignInProps> = ({ navigation }) => {
     );
 };
 
-export default SignIn;
+export default SignUp;

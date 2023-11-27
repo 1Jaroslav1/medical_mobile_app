@@ -41,7 +41,25 @@ export const AuthProvider = ({ children }: any) => {
                 });
             }
         };
+
         loadToken();
+
+        const axiosInterceptor = axios.interceptors.response.use(
+            response => response,
+            error => {
+                if (error.response && error.response.status === 401) {
+                    setAuthState(prevState => ({
+                        ...prevState,
+                        authenticated: false,
+                    }));
+                }
+                return Promise.reject(error);
+            },
+        );
+
+        return () => {
+            axios.interceptors.response.eject(axiosInterceptor);
+        };
     }, []);
 
     const logout = async () => {

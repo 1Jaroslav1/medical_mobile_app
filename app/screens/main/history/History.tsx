@@ -1,4 +1,4 @@
-import { Box, Input, VStack, View, ScrollView } from 'native-base';
+import { Box, Input, VStack, ScrollView } from 'native-base';
 import { DrawerList } from '../Workspace';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import HistoryItem from './HistoryItem';
@@ -17,7 +17,7 @@ const History: React.FC<HistoryProps> = ({ navigation }) => {
 
     return (
         <ScrollView flex={1} p={4}>
-            <VStack space={4}>
+            <VStack space={4} pb={8}>
                 {data?.map((item, index) => (
                     <HistoryItem
                         key={index}

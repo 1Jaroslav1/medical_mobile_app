@@ -99,19 +99,21 @@ const Chat: React.FC<ChatProps> = ({ route, navigation }) => {
     );
 
     const handleSend = useCallback(() => {
-        const data: ChatRequest = {
-            chatId,
-            question,
-        };
-        const tempMessage: Message = {
-            question,
-        };
-        onSubmit(data);
-        setQuestion('');
-        setControlledMessages(controlledMessages => [
-            ...(controlledMessages || []),
-            tempMessage,
-        ]);
+        if (question && question !== '') {
+            const data: ChatRequest = {
+                chatId,
+                question,
+            };
+            const tempMessage: Message = {
+                question,
+            };
+            onSubmit(data);
+            setQuestion('');
+            setControlledMessages(controlledMessages => [
+                ...(controlledMessages || []),
+                tempMessage,
+            ]);
+        }
     }, [onSubmit, chatId, question]);
 
     return (
