@@ -1,4 +1,5 @@
-const BASE_URL = 'http://192.168.84.215:8080';
+// const BASE_URL = 'http://192.168.18.215:8080';
+const BASE_URL = 'http://192.168.226.215:8080';
 
 export const API_URL = {
     SIGN_IN: BASE_URL + '/api/auth/signin',
@@ -7,4 +8,7 @@ export const API_URL = {
     USER_DETAILS: BASE_URL + '/api/user',
     ALL_CHAT_MESSAGES: BASE_URL + '/api/message/all/',
     GET_ANSWER: BASE_URL + '/api/message',
+    UPDATE_USERNAME: BASE_URL + '/api/user/username/',
+    UPDATE_EMAIL: BASE_URL + '/api/user/email/',
+    UPDATE_PASSWORD: BASE_URL + '/api/user/password/',
 };

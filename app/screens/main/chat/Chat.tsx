@@ -1,8 +1,11 @@
 import {
+    Box,
     Input,
+    Image,
     ScrollView,
     IconButton,
     Icon,
+    Text,
     HStack,
     VStack,
     Spinner,
@@ -20,15 +23,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
 import { API_URL } from '../../../api/api';
 import { useMutation } from '@tanstack/react-query';
-import {
-    useCallback,
-    useRef,
-    useEffect,
-    useState,
-    useLayoutEffect,
-} from 'react';
+import { useCallback, useRef, useEffect, useState } from 'react';
 import { Message } from '../../../model';
 import { ScrollView as RNScrollView } from 'react-native';
+import { ScreenContainer } from '../../../components';
+
+const DoctorIcon = require('../../../../assets/img/doctor.png');
 
 type ChatProps = {
     route: RouteProp<DrawerList, 'Chat'>;
@@ -64,10 +64,9 @@ const Chat: React.FC<ChatProps> = ({ route, navigation }) => {
                 refetchHistory();
             }
             let title = route.params.name;
-            console.log(title);
             if (title === 'New Chat') {
-                if (title.length >= 32) {
-                    title = title.slice(0, 30) + '...';
+                if (title.length >= 42) {
+                    title = title.slice(0, 40) + '...';
                 }
                 navigation.setOptions({ title });
             }
@@ -117,64 +116,95 @@ const Chat: React.FC<ChatProps> = ({ route, navigation }) => {
     }, [onSubmit, chatId, question]);
 
     return (
-        <VStack flex={1} justifyContent="flex-end" space={2}>
-            <ScrollView
-                ref={scrollViewRef}
-                px="10px"
-                showsVerticalScrollIndicator={false}
-                onContentSizeChange={handleContextChange}
+        <ScreenContainer>
+            <VStack
+                flex={1}
+                justifyContent="flex-end"
+                space={2}
+                bgColor="green"
             >
-                {isLoading ? (
-                    <Spinner />
+                {controlledMessages && controlledMessages.length > 0 ? (
+                    <ScrollView
+                        ref={scrollViewRef}
+                        px="10px"
+                        showsVerticalScrollIndicator={false}
+                        onContentSizeChange={handleContextChange}
+                        endFillColor="primaryBlue.200"
+                    >
+                        {isLoading ? (
+                            <Spinner />
+                        ) : (
+                            <VStack space={2} mt={2}>
+                                {controlledMessages?.map((item, index) => {
+                                    return (
+                                        <VStack key={index} space={2}>
+                                            <UserChatItem
+                                                user={user}
+                                                text={item.question}
+                                                date={item.createdQuestionAt}
+                                            />
+                                            {item.answer ? (
+                                                <AssistantChatItem
+                                                    text={item.answer}
+                                                    date={item.createdAnswerAt}
+                                                />
+                                            ) : (
+                                                <Spinner size="lg" />
+                                            )}
+                                        </VStack>
+                                    );
+                                })}
+                            </VStack>
+                        )}
+                    </ScrollView>
                 ) : (
-                    <VStack space={5}>
-                        {controlledMessages?.map((item, index) => {
-                            return (
-                                <VStack key={index} space={5}>
-                                    <UserChatItem
-                                        user={user}
-                                        text={item.question}
-                                        date={item.createdQuestionAt}
-                                    />
-                                    {item.answer ? (
-                                        <AssistantChatItem
-                                            text={item.answer}
-                                            date={item.createdAnswerAt}
-                                        />
-                                    ) : (
-                                        <Spinner size="lg" />
-                                    )}
-                                </VStack>
-                            );
-                        })}
+                    <VStack
+                        flex={1}
+                        alignContent="center"
+                        alignSelf="center"
+                        justifyContent="center"
+                        height="100%"
+                        justifyItems="center"
+                        space={5}
+                    >
+                        <Image
+                            source={DoctorIcon}
+                            alt="Alternate Text"
+                            size="xl"
+                        />
+                        <Text
+                            textAlign="center"
+                            fontSize="18px"
+                            color="primaryBlue.700"
+                        >
+                            How can I help?
+                        </Text>
                     </VStack>
                 )}
-            </ScrollView>
-            <HStack space={2} alignItems="center" px="20px" pb="20px">
-                <Input
-                    flex={1}
-                    value={question}
-                    variant="outline"
-                    placeholder="Type here..."
-                    borderColor="gray.700"
-                    color="gray.700"
-                    onChange={handleQuestionChange}
-                />
-                <IconButton
-                    icon={
-                        <Icon
-                            as={MaterialIcons}
-                            name="send"
-                            size="sm"
-                            color="white"
-                        />
-                    }
-                    borderRadius="full"
-                    bgColor="primary.600"
-                    onPress={handleSend}
-                />
-            </HStack>
-        </VStack>
+                <HStack space={2} alignItems="center" px="20px" pb="20px">
+                    <Input
+                        flex={1}
+                        value={question}
+                        variant="outline"
+                        placeholder="Type here..."
+                        onChange={handleQuestionChange}
+                    />
+                    <IconButton
+                        icon={
+                            <Icon
+                                as={MaterialIcons}
+                                name="send"
+                                size="sm"
+                                color="white"
+                            />
+                        }
+                        borderRadius="full"
+                        bgColor="primaryBlue.400"
+                        onPress={handleSend}
+                    />
+                </HStack>
+            </VStack>
+        </ScreenContainer>
     );
 };
 

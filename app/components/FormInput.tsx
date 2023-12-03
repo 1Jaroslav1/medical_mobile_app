@@ -1,7 +1,8 @@
 import { Control, useController } from 'react-hook-form';
-import { Input, Text, View } from 'native-base';
+import { Box, FormControl, Input, WarningOutlineIcon } from 'native-base';
 
 interface FormInput {
+    label: string;
     name: string;
     control: Control<any, any>;
     mb?: string;
@@ -11,6 +12,7 @@ interface FormInput {
 
 export const FormInput = ({
     name,
+    label,
     control,
     mb,
     type,
@@ -18,18 +20,21 @@ export const FormInput = ({
 }: FormInput) => {
     const { field, fieldState } = useController({ name, control });
     return (
-        <View mb={mb}>
-            <Input
-                type={type}
-                placeholder={placeholder}
-                value={field.value}
-                onChangeText={field.onChange}
-            />
-            {fieldState.error ? (
-                <Text color="red.500" pt="10px" pb="10px">
+        <Box mb={mb}>
+            <FormControl isInvalid={fieldState.error != undefined}>
+                <FormControl.Label>{label}</FormControl.Label>
+                <Input
+                    type={type}
+                    placeholder={placeholder}
+                    value={field.value}
+                    onChangeText={field.onChange}
+                />
+                <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}
+                >
                     {fieldState.error?.message}
-                </Text>
-            ) : null}
-        </View>
+                </FormControl.ErrorMessage>
+            </FormControl>
+        </Box>
     );
 };

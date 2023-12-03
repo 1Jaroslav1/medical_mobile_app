@@ -85,17 +85,24 @@ const SignIn: React.FC<SignInProps> = ({ navigation }) => {
             alignItems="center"
             w="100%"
         >
-            <Heading size="md" alignSelf="center" mb="20px">
+            <Heading
+                size="md"
+                alignSelf="center"
+                mb="20px"
+                color="primaryBlue.700"
+            >
                 SignIn
             </Heading>
             <Box w="100%">
                 <FormInput
+                    label="Email"
                     name="email"
                     control={control}
                     mb="10px"
                     placeholder="Enter email..."
                 />
                 <FormInput
+                    label="Password"
                     name="password"
                     type="password"
                     control={control}
@@ -106,7 +113,7 @@ const SignIn: React.FC<SignInProps> = ({ navigation }) => {
             </Box>
             <Box p="20px" flexDirection="row">
                 <Text>Don't have an account?</Text>{' '}
-                <Text color="primary.500" onPress={handleSignUp}>
+                <Text color="primaryBlue.400" onPress={handleSignUp}>
                     Sign up
                 </Text>
             </Box>

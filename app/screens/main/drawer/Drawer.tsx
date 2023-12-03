@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { View, Text, Box, Image } from 'native-base';
+import { View, Text, Box } from 'native-base';
 import {
     DrawerContentScrollView,
     DrawerContentComponentProps,
@@ -9,8 +9,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useUser } from '../../../api/useUser';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
-const RobotIcon = require('../../../../assets/robot.png');
+import { Feather } from '@expo/vector-icons';
 
 const CustomDrawerContent: React.FC<DrawerContentComponentProps> = props => {
     const { state, descriptors, navigation } = props;
@@ -30,7 +29,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = props => {
                     alignItems="center"
                     alignSelf="left"
                 >
-                    <Image source={RobotIcon} alt="Alternate Text" size="xs" />
+                    <Feather name="user" size={40} color="white" />
                     <Box ml="10px">
                         <Text color="white" fontSize="xl">
                             {user?.name}

@@ -1,12 +1,13 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Chat from './chat/Chat';
 import History from './history/History';
-import Settings from './Settings';
+import Settings from './settings/Settings';
 import Drawer from './drawer/Drawer';
 import { Dimensions } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { colors } from '../../shared/colors';
 
 export type DrawerList = {
     Chat: { chatId: number | null; name: string };
@@ -27,6 +28,10 @@ const Workspace = () => {
                 },
                 drawerActiveTintColor: 'blue',
                 drawerInactiveTintColor: 'gray',
+                headerStyle: {
+                    backgroundColor: colors.primaryBlue_400,
+                },
+                headerTintColor: 'white',
             }}
         >
             <NDrawer.Screen
@@ -55,6 +60,7 @@ const Workspace = () => {
                 name="Settings"
                 component={Settings}
                 options={{
+                    title: 'Settings',
                     drawerLabel: 'Settings',
                     drawerIcon: () => (
                         <Feather name="settings" size={24} color="white" />

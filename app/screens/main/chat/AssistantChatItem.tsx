@@ -1,7 +1,7 @@
-import { View, Text, Box, HStack } from 'native-base';
+import { Image, View, Text, Box, HStack } from 'native-base';
 import React from 'react';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { User, Message } from '../../../model';
+
+const DoctorIcon = require('../../../../assets/img/doctor.png');
 
 interface ChatIAssistantProps {
     text?: string;
@@ -10,19 +10,26 @@ interface ChatIAssistantProps {
 
 const AssistantChatItem = ({ text, date }: ChatIAssistantProps) => {
     return (
-        <View flex={1} p={2}>
+        <Box
+            flex={1}
+            p={2}
+            borderWidth="2px"
+            borderColor="gray.400"
+            borderRadius="5px"
+            bgColor="gray.200"
+        >
             <Box>
                 <HStack alignItems="center" space={3}>
                     <Box
-                        p="10px"
+                        p="5px"
                         alignSelf="center"
                         bgColor="blueGray.600"
                         borderRadius="full"
                     >
-                        <MaterialCommunityIcons
-                            name="robot-outline"
-                            size={24}
-                            color="white"
+                        <Image
+                            source={DoctorIcon}
+                            alt="Alternate Text"
+                            size={5}
                         />
                     </Box>
                     <Text fontSize={16} fontWeight={500}>
@@ -30,10 +37,10 @@ const AssistantChatItem = ({ text, date }: ChatIAssistantProps) => {
                     </Text>
                 </HStack>
             </Box>
-            <Box pl="50px" mt="5px">
+            <Box pl="44px" mt="5px">
                 <Text>{text || 'No Message'}</Text>
             </Box>
-        </View>
+        </Box>
     );
 };
 

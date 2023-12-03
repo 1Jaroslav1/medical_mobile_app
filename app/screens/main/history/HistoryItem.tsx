@@ -1,21 +1,15 @@
-import { Box, Text, HStack, Pressable } from 'native-base';
-import { DrawerList } from '../Workspace';
-import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { Text, HStack, Pressable } from 'native-base';
 import { useCallback } from 'react';
 
 interface HistoryItemProps {
     chatId: number;
     label: string;
-    onHistoryItemPress: (chatId: number, name: string) => void;
+    onPress: (chatId: number, name: string) => void;
 }
 
-const HistoryItem = ({
-    chatId,
-    label,
-    onHistoryItemPress,
-}: HistoryItemProps) => {
+const HistoryItem = ({ chatId, label, onPress }: HistoryItemProps) => {
     const handlePressHistoryItem = useCallback(() => {
-        onHistoryItemPress(chatId, label);
+        onPress(chatId, label);
     }, []);
 
     return (
@@ -23,7 +17,9 @@ const HistoryItem = ({
             py="5"
             px="5"
             bgColor="gray.200"
-            borderRadius="8px"
+            borderWidth="2px"
+            borderColor="gray.400"
+            borderRadius="5px"
             onPress={handlePressHistoryItem}
         >
             <HStack space="5" alignItems="center">

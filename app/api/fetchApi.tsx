@@ -33,7 +33,7 @@ const unauthorizedHandler = (toast: any) => {
                     description="Wrong credentials"
                     status="error"
                     variant="solid"
-                    isClosable={false}
+                    isClosable={true}
                 />
             );
         },
@@ -51,7 +51,7 @@ const forbiddenHandler = (toast: any) => {
                     description="You are not authorized for requested action"
                     status="error"
                     variant="solid"
-                    isClosable={false}
+                    isClosable={true}
                 />
             );
         },
@@ -69,7 +69,7 @@ const failHandler = (toast: any, message: string | undefined) => {
                     description={message}
                     status="warning"
                     variant="solid"
-                    isClosable={false}
+                    isClosable={true}
                 />
             );
         },
@@ -97,6 +97,7 @@ export const fetchApi = () => {
 
                 if (httpStatus === status.UNAUTHORIZED) {
                     unauthorizedHandler(toast);
+                    axios.defaults.headers.common['Authorization'] = null;
                     throw new NotAuthorizedError();
                 }
                 if (httpStatus === status.FORBIDDEN) {
