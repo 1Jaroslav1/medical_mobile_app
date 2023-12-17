@@ -18,7 +18,7 @@ import {
     useToast,
 } from 'native-base';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { StackParamList } from '../../../App';
+import { StackParamList } from '../Layout';
 import { fetchApi } from '../../api/fetchApi';
 
 interface SignUpRequest {
