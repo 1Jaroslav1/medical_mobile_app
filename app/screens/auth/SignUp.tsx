@@ -81,7 +81,7 @@ const SignUp: React.FC<SignUpProps> = ({ navigation }) => {
                 mb="20px"
                 color="primaryBlue.700"
             >
-                SignIn
+                SignUp
             </Heading>
             <Box w="100%">
                 <FormInput
@@ -123,7 +123,7 @@ const SignUp: React.FC<SignUpProps> = ({ navigation }) => {
                         h="100%"
                     >
                         <VStack space={4}>
-                            <Text fontSize={20}>Sign In</Text>
+                            <Text fontSize={20}>Sign Up</Text>
                             <Spinner size={30} />
                         </VStack>
                     </Modal.Body>

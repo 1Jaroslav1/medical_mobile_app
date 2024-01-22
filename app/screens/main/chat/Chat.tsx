@@ -1,5 +1,4 @@
 import {
-    Box,
     Input,
     Image,
     ScrollView,
@@ -9,6 +8,7 @@ import {
     HStack,
     VStack,
     Spinner,
+    useToast,
 } from 'native-base';
 import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { DrawerList } from '../Workspace';
@@ -27,6 +27,7 @@ import { useCallback, useRef, useEffect, useState } from 'react';
 import { Message } from '../../../model';
 import { ScrollView as RNScrollView } from 'react-native';
 import { ScreenContainer } from '../../../components';
+import { fetchApi } from '../../../api/fetchApi';
 
 const DoctorIcon = require('../../../../assets/img/doctor.png');
 
@@ -41,10 +42,16 @@ interface ChatRequest {
 }
 
 const Chat: React.FC<ChatProps> = ({ route, navigation }) => {
+    const toast = useToast();
+
     const chatId = route?.params?.chatId;
     const { data: user } = useUser();
 
-    const { data: messages, isLoading, refetch } = useMessages(chatId);
+    const {
+        data: messages,
+        isLoading,
+        refetch: refetchMessages,
+    } = useMessages(chatId);
     const { refetch: refetchHistory } = useHistory();
 
     const [question, setQuestion] = useState<string>('');
@@ -56,21 +63,22 @@ const Chat: React.FC<ChatProps> = ({ route, navigation }) => {
 
     const { mutate } = useMutation({
         mutationFn: (data: ChatRequest) => {
-            return axios.post(API_URL.GET_ANSWER, data);
+            return fetchApi()(
+                { url: API_URL.GET_ANSWER, method: 'POST', postData: data },
+                toast,
+            );
         },
         onSuccess: async result => {
             if (!chatId) {
                 navigation.setParams({ chatId: result.data?.chatId });
                 refetchHistory();
             }
-            let title = route.params.name;
+            let title = route.params?.name;
             if (title === 'New Chat') {
-                if (title.length >= 42) {
-                    title = title.slice(0, 40) + '...';
-                }
+                title = createTitle(title);
                 navigation.setOptions({ title });
             }
-            refetch();
+            refetchMessages();
         },
     });
 
@@ -207,5 +215,12 @@ const Chat: React.FC<ChatProps> = ({ route, navigation }) => {
         </ScreenContainer>
     );
 };
+
+function createTitle(title: string) {
+    if (title.length >= 42) {
+        return title.slice(0, 40) + '...';
+    }
+    return title;
+}
 
 export default Chat;

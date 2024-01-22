@@ -22,24 +22,6 @@ const successHandler = (toast: any) => {
     });
 };
 
-const unauthorizedHandler = (toast: any) => {
-    toast.show({
-        placement: 'top',
-        render: ({ id }: { id: any }) => {
-            return (
-                <ToastAlert
-                    id={id}
-                    title="Unauthorized error"
-                    description="Wrong credentials"
-                    status="error"
-                    variant="solid"
-                    isClosable={true}
-                />
-            );
-        },
-    });
-};
-
 const forbiddenHandler = (toast: any) => {
     toast.show({
         placement: 'top',
@@ -76,6 +58,24 @@ const failHandler = (toast: any, message: string | undefined) => {
     });
 };
 
+const unauthorizedHandler = (toast: any) => {
+    toast.show({
+        placement: 'top',
+        render: ({ id }: { id: any }) => {
+            return (
+                <ToastAlert
+                    id={id}
+                    title="Unauthorized error"
+                    description="Wrong credentials"
+                    status="warning"
+                    variant="solid"
+                    isClosable={true}
+                />
+            );
+        },
+    });
+};
+
 export const fetchApi = () => {
     return ({ url, method, postData }: Api.FetchConfig, toast: any) => {
         const axiosConfig = {
@@ -83,14 +83,12 @@ export const fetchApi = () => {
             method,
             data: postData,
         };
-
         return axios(axiosConfig)
             .then(response => {
                 return response;
             })
             .catch((error: AxiosError) => {
                 const httpStatus: number | undefined = error.response?.status;
-
                 if (!httpStatus) {
                     throw new Error(ServerErrorMessage);
                 }
@@ -110,7 +108,8 @@ export const fetchApi = () => {
                 ) {
                     failHandler(
                         toast,
-                        'Server rejected request - malformed request format',
+                        (error.response?.data as string) ||
+                            'Server rejected request - malformed request format',
                     );
                     throw new Error(ServerErrorMessage);
                 }
@@ -118,7 +117,11 @@ export const fetchApi = () => {
                     httpStatus === status.INTERNAL_SERVER_ERROR ||
                     httpStatus === status.SERVICE_UNAVAILABLE
                 ) {
-                    failHandler(toast, 'Cannot handle request');
+                    failHandler(
+                        toast,
+                        (error.response?.data as string) ||
+                            'Cannot handle request',
+                    );
                     throw new ServerError(
                         error.response?.statusText || 'Server Error',
                     );
